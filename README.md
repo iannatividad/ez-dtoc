@@ -6,10 +6,10 @@ To get started with the project, you'll first need to clone it from GitHub to yo
 
 1. **Open Terminal**: Open your terminal or command prompt.
 
-2. **Clone the Repository**: Run the following command to clone the repository. Make sure to replace `YOUR_REPOSITORY_URL` with the actual URL of your GitHub repository.
+2. **Clone the Repository**: Run the following command to clone the repository. Make sure to replace `https://github.com/iannatividad/ez-dtoc.git` with the actual URL of your GitHub repository.
 
     ```bash
-    git clone YOUR_REPOSITORY_URL
+    git clone https://github.com/iannatividad/ez-dtoc.git
     ```
 
 3. **Navigate to the Project Directory**: Once cloning is complete, navigate to the project directory.

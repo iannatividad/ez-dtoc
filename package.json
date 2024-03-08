@@ -1,0 +1,31 @@
+{
+  "name": "ez-dtoc",
+  "version": "1.0.0",
+  "description": "Your Figma Plugin",
+  "main": "code.js",
+  "scripts": {
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "@figma/plugin-typings": "*",
+    "concurrently": "^8.2.2",
+    "copyfiles": "^2.4.1",
+    "css-loader": "^6.10.0",
+    "file-loader": "^6.2.0",
+    "html-loader": "^5.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "nodemon": "^3.0.3",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.1"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3"
+  }
+}

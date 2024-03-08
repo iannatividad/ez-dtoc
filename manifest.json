@@ -1,0 +1,16 @@
+{
+  "name": "ez-dtoc",
+  "id": "1339263998755980430",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"],
+  "ui": "dist/ui.html",
+  "networkAccess": {
+    "allowedDomains": [
+      "https://automation.symph.co/webhook-test/ez-dtoc/start",
+      "https://automation.symph.co/webhook/ez-dtoc/start"
+    ]
+  }
+}

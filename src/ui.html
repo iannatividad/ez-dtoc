@@ -1,0 +1,206 @@
+<style>
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  h4 {
+    font-size: 16px;
+    color: #ffffff;
+  }
+
+  .output-container {
+    width: 480px;
+    padding: 12px;
+    background-color: black;
+  }
+
+  #output {
+    white-space: pre-wrap;
+    color: #fff;
+    font-family: monospace;
+  }
+
+  .container {
+    background-color: #171717;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 16px;
+    height: 100%;
+  }
+
+  #generated-code-container,
+  #enhanced-code-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  button {
+    padding: 12px;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .api-key-container {
+    display: flex;
+  }
+
+  #save-api-key {
+    margin-left: 12px;
+  }
+
+  #generated-code,
+  #enhanced-code {
+    width: 100%;
+  }
+
+  .spinner {
+    border: 2px solid #8a8a8a;
+    border-radius: 50%;
+    border-top: 2px solid #171717;
+    width: 12px;
+    height: 12px;
+    -webkit-animation: spin 1s linear infinite;
+    /* Safari */
+    animation: spin 1s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<div class="container">
+  <div id="generated-code-container">
+    <div>
+      <button id="get-design-data">Generate
+        <div class="spinner" hidden></div>
+      </button>
+    </div>
+    <div>
+      <textarea id="generated-code" rows="10" placeholder="Generated code here..."></textarea>
+    </div>
+  </div>
+  <div id="enhanced-code-container">
+    <div>
+      <button id="get-enhanced-data">Enhance
+        <div class="spinner" hidden></div>
+      </button>
+    </div>
+    <div>
+      <textarea id="enhanced-code" rows="10" placeholder="Enhanced code here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+  const generatedCodeTextareaDoc = document.getElementById("generated-code");
+  const enhancedCodeTextareaDoc = document.getElementById("enhanced-code");
+
+  function toggleEnhancedCodeContainer() {
+    const generatedCode = document.getElementById("generated-code").value;
+    const enhancedCodeContainer = document.getElementById("enhanced-code-container");
+
+    if (generatedCode.trim()) {
+      enhancedCodeContainer.style.display = 'flex';
+    } else {
+      enhancedCodeContainer.style.display = 'none';
+    }
+  }
+
+  toggleEnhancedCodeContainer();
+  generatedCodeTextareaDoc.addEventListener('input', toggleEnhancedCodeContainer);
+
+  async function enhanceCodeWithAI(generatedCodeStr) {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      generated: generatedCodeStr
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    const response = await fetch(
+      "https://automation.symph.co/webhook/ez-dtoc/start",
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  }
+
+  const button = document.getElementById("get-design-data");
+  const spinner = button.querySelector('.spinner');
+
+  document.getElementById("get-design-data").addEventListener("click", async () => {
+    button.disabled = true;
+    spinner.hidden = false;
+    parent.postMessage({ pluginMessage: { type: "get-selected-json" } }, "*");
+  });
+
+  document.getElementById("get-enhanced-data").addEventListener("click", async () => {
+    const button = document.getElementById("get-enhanced-data");
+    const spinner = button.querySelector('.spinner');
+    button.disabled = true;
+    spinner.hidden = false;
+
+    try {
+      const generatedCode = generatedCodeTextareaDoc.value;
+      const { text } = await enhanceCodeWithAI(generatedCode);
+      enhancedCodeTextareaDoc.innerText = text || "Error enhancing code";
+    } catch (error) {
+      enhancedCodeTextareaDoc.innerText = "Error enhancing code";
+    } finally {
+      button.disabled = false;
+      spinner.hidden = true;
+    }
+  });
+
+  // Listen for messages from the plugin code
+  window.onmessage = async (event) => {
+    const { type, payload, } = event.data.pluginMessage;
+
+    if (type === "generated-code") {
+      enhancedCodeTextareaDoc.innerText = '';
+      generatedCodeTextareaDoc.innerText = payload;
+      button.disabled = false;
+      spinner.hidden = true;
+      toggleEnhancedCodeContainer();
+    }
+  };
+</script>
