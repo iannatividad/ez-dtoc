@@ -1,5 +1,7 @@
 # Ez-DToC 🚀
 
+![Tutorial](assets/tutorial.gif)
+
 ## Cloning the Project 📋
 
 To get started with the project, you'll first need to clone it from GitHub to your local machine.
